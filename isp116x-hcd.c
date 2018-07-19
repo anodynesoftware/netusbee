@@ -1881,12 +1881,10 @@ static long get_cpu_cookie(void)
     return get_cookie(CPU_COOKIE);
 }
 
-int main(int argc, char **argv);static long get_usb_cookie(void)
+static long get_usb_cookie(void)
 {
     return get_cookie(USB_COOKIE);
 }
-
-int main(int argc, char **argv);
 
 int
 main(int argc, char **argv)
