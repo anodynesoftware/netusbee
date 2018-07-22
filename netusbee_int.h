@@ -25,8 +25,6 @@
 #ifndef _netusbee_int_h
 #define _netusbee_int_h
 
-#define MINT_INT_OFF
-#define MINT_INT_ON
 #define TOS_INT_OFF		Supexec(set_int_lvl6)
 #define TOS_INT_ON		Supexec(set_old_int_lvl)
 
