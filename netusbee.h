@@ -20,6 +20,9 @@
 # define NULL	((void *)0L)
 #endif
 
+#define FALSE       (0)
+#define TRUE        (!0)
+
 #define UNUSED(x)	(void)x
 
 typedef unsigned long ulong;
