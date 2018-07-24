@@ -92,8 +92,10 @@
 
 /* --- ISP116x address registers in Netusbee --------------------------------*/
 
-#define ISP116X_HCD_ADDR	0x00FBC000
-#define ISP116X_HCD_DATA	0x00FA0000
+#define ISP116X_LSB_WRITE		0x00FA0000
+#define ISP116X_DATA_READ		0x00FA8000
+#define ISP116X_MSB_DATA_WRITE	0x00FB8000
+#define ISP116X_MSB_CMD_WRITE	0x00FBC000
 
 /* --- ISP116x registers/bits ---------------------------------------------- */
 
@@ -419,9 +421,9 @@ static inline void isp116x_write_addr(struct isp116x *isp116x, unsigned reg)
 {
 	unsigned short dumm;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + ((reg & 0x00ff)<<1));
+	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((reg & 0x00ff)<<1));
 	dumm = raw_readw(isp116x->data_reg);
-	isp116x->addr_reg = (unsigned short*)ISP116X_HCD_ADDR;
+	isp116x->addr_reg = (unsigned short*)ISP116X_MSB_CMD_WRITE;
 	dumm = raw_readw(isp116x->addr_reg);
 	DELAY_300NS;
 
@@ -432,9 +434,9 @@ static inline void isp116x_write_data16(struct isp116x *isp116x, unsigned short 
 {
 	unsigned short dumm;
 	
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + ((val & 0xff00)>>7));
+	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0xff00)>>7));
 	dumm = raw_readw(isp116x->data_reg);
-	isp116x->addr_reg = (unsigned short*)((ISP116X_HCD_ADDR - 0x4000) + ((val & 0x00ff)<<1));
+	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0x00ff)<<1));
 	dumm = raw_readw(isp116x->addr_reg);
 	DELAY_300NS;
 
@@ -445,9 +447,9 @@ static inline void isp116x_raw_write_data16(struct isp116x *isp116x, unsigned sh
 {
 	unsigned short dumm;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + ((val & 0x00ff)<<1));
+	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x00ff)<<1));
 	dumm = raw_readw(isp116x->data_reg);
-	isp116x->addr_reg =  (unsigned short*)((ISP116X_HCD_ADDR - 0x4000) + ((val & 0xff00)>>7));
+	isp116x->addr_reg =  (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0xff00)>>7));
 	dumm = raw_readw(isp116x->addr_reg);
 	DELAY_300NS;
 
@@ -458,7 +460,7 @@ static inline unsigned short isp116x_read_data16(struct isp116x *isp116x)
 {
 	unsigned short val;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + 0x8000);
+	isp116x->data_reg = (unsigned short*)(ISP116X_DATA_READ);
 	val = readw(isp116x->data_reg );
 	DELAY_150NS;
 
@@ -469,7 +471,7 @@ static inline unsigned short isp116x_raw_read_data16(struct isp116x *isp116x)
 {
 	unsigned short val;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + 0x8000);
+	isp116x->data_reg = (unsigned short*)(ISP116X_DATA_READ);
 	val = raw_readw(isp116x->data_reg );
 	DELAY_150NS;
 
@@ -493,14 +495,14 @@ static inline void isp116x_raw_write_data32(struct isp116x *isp116x, unsigned lo
 {
 	unsigned short dumm;
 
-	isp116x->data_reg =  (unsigned short*)(ISP116X_HCD_DATA + ((val & 0x000000ff)<<1));
+	isp116x->data_reg =  (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x000000ff)<<1));
 	dumm = raw_readw(isp116x->data_reg);
-	isp116x->addr_reg = (unsigned short*)((ISP116X_HCD_ADDR - 0x4000) + ((val & 0x0000ff00)>>7));
+	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0x0000ff00)>>7));
 	dumm = raw_readw(isp116x->addr_reg);
 	DELAY_300NS;
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + ((val & 0x00ff0000)>>15));
+	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x00ff0000)>>15));
 	dumm = raw_readw(isp116x->data_reg);
-	isp116x->addr_reg = (unsigned short*)((ISP116X_HCD_ADDR - 0x4000) + ((val & 0xff000000)>>23) );
+	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0xff000000)>>23) );
 	dumm = raw_readw(isp116x->addr_reg);
 	DELAY_300NS;
 
@@ -528,7 +530,7 @@ static inline unsigned long isp116x_raw_read_data32(struct isp116x *isp116x)
 {
 	unsigned long val;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_HCD_DATA + 0x8000);
+	isp116x->data_reg = (unsigned short*)(ISP116X_DATA_READ);
 	val = (unsigned long) raw_readw(isp116x->data_reg );
 	DELAY_150NS;
 	val |= ((unsigned long) raw_readw(isp116x->data_reg )) << 16;
