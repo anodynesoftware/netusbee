@@ -397,9 +397,9 @@ struct isp116x
 
 /* ISP116x registers access */
 
-inline unsigned read_le16_reg(const volatile unsigned short *addr)
+static inline unsigned read_le16_reg(const volatile unsigned short *addr)
 {
-	unsigned result = *addr;
+	unsigned short result = *addr;
 	return SWAP16(result);
 }
 
