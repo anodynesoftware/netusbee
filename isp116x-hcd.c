@@ -1754,8 +1754,8 @@ usb_lowlevel_init(void *dummy)
 	got_rhsc = rh_devnum = 0;
 
 	/* Init device registers addr */
-	isp116x->addr_reg = (unsigned short *) ISP116X_MSB_CMD_WRITE;
-	isp116x->data_reg = (unsigned short *) ISP116X_LSB_WRITE;
+	isp116x->addr_reg = NULL;	/* unused */
+	isp116x->data_reg = NULL;
 
 	/* Setup specific board settings */
 #ifdef ISP116X_HCD_INT_ACT_HIGH

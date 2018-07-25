@@ -418,52 +418,33 @@ static inline unsigned read_le16_reg(const volatile unsigned short *addr)
 
 static inline void isp116x_write_addr(struct isp116x *isp116x, unsigned reg)
 {
-	unsigned short dumm;
-
-	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((reg & 0x00ff)<<1));
-	dumm = raw_readw(isp116x->data_reg);
+	raw_readw((unsigned short *)(ISP116X_LSB_WRITE + ((reg & 0x00ff)<<1)));
 	DELAY_150NS;
-	isp116x->addr_reg = (unsigned short*)ISP116X_MSB_CMD_WRITE;
-	dumm = raw_readw(isp116x->addr_reg);
+	raw_readw((unsigned short *)ISP116X_MSB_CMD_WRITE);
 	DELAY_300NS;
-
-	UNUSED (dumm);
 }
 
 static inline void isp116x_write_data16(struct isp116x *isp116x, unsigned short val)
 {
-	unsigned short dumm;
-	
-	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0xff00)>>7));
-	dumm = raw_readw(isp116x->data_reg);
+	raw_readw((unsigned short *)(ISP116X_LSB_WRITE + ((val & 0xff00)>>7)));
 	DELAY_150NS;
-	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0x00ff)<<1));
-	dumm = raw_readw(isp116x->addr_reg);
+	raw_readw((unsigned short *)(ISP116X_MSB_DATA_WRITE + ((val & 0x00ff)<<1)));
 	DELAY_150NS;
-
-	UNUSED (dumm);
 }
 
 static inline void isp116x_raw_write_data16(struct isp116x *isp116x, unsigned short val)
 {
-	unsigned short dumm;
-
-	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x00ff)<<1));
-	dumm = raw_readw(isp116x->data_reg);
+	raw_readw((unsigned short *)(ISP116X_LSB_WRITE + ((val & 0x00ff)<<1)));
 	DELAY_150NS;
-	isp116x->addr_reg =  (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0xff00)>>7));
-	dumm = raw_readw(isp116x->addr_reg);
+	raw_readw((unsigned short *)(ISP116X_MSB_DATA_WRITE + ((val & 0xff00)>>7)));
 	DELAY_150NS;
-
-	UNUSED (dumm);
 }
 
 static inline unsigned short isp116x_read_data16(struct isp116x *isp116x)
 {
 	unsigned short val;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_DATA_READ);
-	val = readw(isp116x->data_reg );
+	val = readw((unsigned short *)ISP116X_DATA_READ);
 	DELAY_150NS;
 
 	return val;
@@ -473,8 +454,7 @@ static inline unsigned short isp116x_raw_read_data16(struct isp116x *isp116x)
 {
 	unsigned short val;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_DATA_READ);
-	val = raw_readw(isp116x->data_reg );
+	val = raw_readw((unsigned short *)ISP116X_DATA_READ);
 	DELAY_150NS;
 
 	return val;
@@ -482,32 +462,23 @@ static inline unsigned short isp116x_raw_read_data16(struct isp116x *isp116x)
 
 static inline void isp116x_raw_write_data32(struct isp116x *isp116x, unsigned long val)
 {
-	unsigned short dumm;
-
-	isp116x->data_reg =  (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x000000ff)<<1));
-	dumm = raw_readw(isp116x->data_reg);
+	raw_readw((unsigned short *)(ISP116X_LSB_WRITE + ((val & 0x000000ff)<<1)));
 	DELAY_150NS;
-	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0x0000ff00)>>7));
-	dumm = raw_readw(isp116x->addr_reg);
+	raw_readw((unsigned short *)(ISP116X_MSB_DATA_WRITE + ((val & 0x0000ff00)>>7)));
 	DELAY_150NS;
-	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x00ff0000)>>15));
-	dumm = raw_readw(isp116x->data_reg);
+	raw_readw((unsigned short *)(ISP116X_LSB_WRITE + ((val & 0x00ff0000)>>15)));
 	DELAY_150NS;
-	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0xff000000)>>23) );
-	dumm = raw_readw(isp116x->addr_reg);
+	raw_readw((unsigned short *)(ISP116X_MSB_DATA_WRITE + ((val & 0xff000000)>>23)));
 	DELAY_150NS;
-
-	UNUSED (dumm);
 }
 
 static inline unsigned long isp116x_raw_read_data32(struct isp116x *isp116x)
 {
 	unsigned long val;
 
-	isp116x->data_reg = (unsigned short*)(ISP116X_DATA_READ);
-	val = (unsigned long) raw_readw(isp116x->data_reg );
+	val = (unsigned long) raw_readw((unsigned short *)ISP116X_DATA_READ);
 	DELAY_150NS;
-	val |= ((unsigned long) raw_readw(isp116x->data_reg )) << 16;
+	val |= ((unsigned long) raw_readw((unsigned short *)ISP116X_DATA_READ)) << 16;
 	DELAY_150NS;
 
 	return val;
