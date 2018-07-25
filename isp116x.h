@@ -397,6 +397,15 @@ struct isp116x
 
 /* ISP116x registers access */
 
+/*
+ * note the following peculiarities for the NetUSBee:
+ * 1. since this is a ROMport device, it is never actually written
+ *    to; therefore there are no low-level write register routines
+ * 2. since the ISP1160 swaps bytes when transferring to/from the
+ *    FIFO buffer, we must swap them back.  This is done by the
+ *    routines isp116x_write_data16()/isp116x_read_data16().
+ */
+
 static inline unsigned read_le16_reg(const volatile unsigned short *addr)
 {
 	unsigned short result = *addr;
@@ -468,11 +477,6 @@ static inline unsigned short isp116x_raw_read_data16(struct isp116x *isp116x)
 	return val;
 }
 
-
-/*
- * Added for NetUSBee, to write HC registers without swapping them
- * NetUSBee already swap them by hardware (i suppose.....)
- */
 static inline void isp116x_raw_write_data32(struct isp116x *isp116x, unsigned long val)
 {
 	unsigned short dumm;
@@ -491,11 +495,6 @@ static inline void isp116x_raw_write_data32(struct isp116x *isp116x, unsigned lo
 	UNUSED (dumm);
 }
 
-
-/*
- * Added for NetUSBee, to read HC registers without swapping them
- * NetUSBee already swap them by hardware (i suppose.....)
- */
 static inline unsigned long isp116x_raw_read_data32(struct isp116x *isp116x)
 {
 	unsigned long val;
@@ -508,14 +507,8 @@ static inline unsigned long isp116x_raw_read_data32(struct isp116x *isp116x)
 
 	return val;
 }
-/*******************************************************************/
-
-/* Let's keep register access functions out of line. Hint:
-   we wait at least 150 ns at every access.
-*/
 
 /* with NetUSBee use raw_read to avoid swapping bytes*/
-
 static unsigned short isp116x_read_reg16(struct isp116x *isp116x, unsigned reg)
 {
 	isp116x_write_addr(isp116x, reg);
@@ -535,7 +528,7 @@ static void isp116x_write_reg16(struct isp116x *isp116x, unsigned reg,
 	isp116x_raw_write_data16(isp116x, (unsigned short) (val & 0xffff));
 }
 
-/* with NetUSBee used raw_write to avoid swapping bytes by software */
+/* with NetUSBee used raw_write to avoid swapping bytes */
 static void isp116x_write_reg32(struct isp116x *isp116x, unsigned long reg,
 				unsigned long val)
 {
