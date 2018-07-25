@@ -380,7 +380,7 @@ struct isp116x
 /* Inter-io delay (ns). The chip is picky about access timings; it
  * expects at least:
  * 150ns delay between consecutive accesses to DATA_REG,
- * 300ns delay between access to ADDR_REG and DATA_REG
+ * 300ns delay after (first) access to ADDR_REG
  * OE, WE MUST NOT be changed during these intervals
  *
  * we define SLOW_MACHINE if we're building for a system where one nop
@@ -422,6 +422,7 @@ static inline void isp116x_write_addr(struct isp116x *isp116x, unsigned reg)
 
 	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((reg & 0x00ff)<<1));
 	dumm = raw_readw(isp116x->data_reg);
+	DELAY_150NS;
 	isp116x->addr_reg = (unsigned short*)ISP116X_MSB_CMD_WRITE;
 	dumm = raw_readw(isp116x->addr_reg);
 	DELAY_300NS;
@@ -435,9 +436,10 @@ static inline void isp116x_write_data16(struct isp116x *isp116x, unsigned short 
 	
 	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0xff00)>>7));
 	dumm = raw_readw(isp116x->data_reg);
+	DELAY_150NS;
 	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0x00ff)<<1));
 	dumm = raw_readw(isp116x->addr_reg);
-	DELAY_300NS;
+	DELAY_150NS;
 
 	UNUSED (dumm);
 }
@@ -448,9 +450,10 @@ static inline void isp116x_raw_write_data16(struct isp116x *isp116x, unsigned sh
 
 	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x00ff)<<1));
 	dumm = raw_readw(isp116x->data_reg);
+	DELAY_150NS;
 	isp116x->addr_reg =  (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0xff00)>>7));
 	dumm = raw_readw(isp116x->addr_reg);
-	DELAY_300NS;
+	DELAY_150NS;
 
 	UNUSED (dumm);
 }
@@ -483,14 +486,16 @@ static inline void isp116x_raw_write_data32(struct isp116x *isp116x, unsigned lo
 
 	isp116x->data_reg =  (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x000000ff)<<1));
 	dumm = raw_readw(isp116x->data_reg);
+	DELAY_150NS;
 	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0x0000ff00)>>7));
 	dumm = raw_readw(isp116x->addr_reg);
-	DELAY_300NS;
+	DELAY_150NS;
 	isp116x->data_reg = (unsigned short*)(ISP116X_LSB_WRITE + ((val & 0x00ff0000)>>15));
 	dumm = raw_readw(isp116x->data_reg);
+	DELAY_150NS;
 	isp116x->addr_reg = (unsigned short*)((ISP116X_MSB_DATA_WRITE) + ((val & 0xff000000)>>23) );
 	dumm = raw_readw(isp116x->addr_reg);
-	DELAY_300NS;
+	DELAY_150NS;
 
 	UNUSED (dumm);
 }
