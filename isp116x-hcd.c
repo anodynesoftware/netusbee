@@ -606,11 +606,14 @@ pack_fifo(struct isp116x *isp116x, struct usb_device *dev,
 	dump_ptd_data(ptd, (unsigned char *) data, 0);
 
 	if (write_data) {
+		/* disable interrupts for critical section */
+		unsigned long oldmode = ENSURE_SUPER;
 		TOS_INT_OFF;
 		write_ptddata_to_fifo(isp116x,
 				      (unsigned char *) data,
 				      PTD_GET_LEN(ptd));
 		TOS_INT_ON;
+		RESTORE_MODE(oldmode);
 	}
 }
 
@@ -646,11 +649,14 @@ unpack_fifo(struct isp116x *isp116x, struct usb_device *dev,
 	dump_ptd(ptd);
 
 	if (read_data) {
+		/* disable interrupts for critical section */
+		unsigned long oldmode = ENSURE_SUPER;
 		TOS_INT_OFF;
 		read_ptddata_from_fifo(isp116x,
 				       (unsigned char *) data,
 				       PTD_GET_LEN(ptd));
 		TOS_INT_ON;
+		RESTORE_MODE(oldmode);
 	}
 
 	dump_ptd_data(ptd, (unsigned char *) data, 1);

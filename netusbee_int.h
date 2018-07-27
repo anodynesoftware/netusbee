@@ -25,8 +25,11 @@
 #ifndef _netusbee_int_h
 #define _netusbee_int_h
 
-#define TOS_INT_OFF		Supexec(set_int_lvl6)
-#define TOS_INT_ON		Supexec(set_old_int_lvl)
+#define ENSURE_SUPER	(Super(1L) ? 0L: Super(0L))
+#define RESTORE_MODE(x)	if (x) SuperToUser(x)
+
+#define TOS_INT_OFF		set_int_lvl6()
+#define TOS_INT_ON		set_old_int_lvl()
 
 void set_old_int_lvl(void);
 void set_int_lvl6(void);
