@@ -878,6 +878,11 @@ max_transfer_len(struct usb_device *dev, unsigned long pipe)
 }
 
 /* Do an USB transfer
+ *
+ * If we are in supervisor state, we poll for ikbd interrupts on the
+ * assumption that we were called from the timer interrupt (via etv_timer)
+ * and thus are running with interrupts disabled.  This will happen when
+ * called by a USB mouse or keyboard driver.
  */
 static long
 isp116x_submit_job(struct usb_device *dev, unsigned long pipe,
@@ -900,10 +905,20 @@ isp116x_submit_job(struct usb_device *dev, unsigned long pipe,
 	 */
 	short retries = (type == PIPE_INTERRUPT) ? 0 : 500;
 	short set_extra_delay = 0;
+	short poll_interrupts = 0;	
 
 	DEBUG(("------------------------------------------------"));
 	dump_msg(dev, pipe, buffer, len, "SUBMIT");
 	DEBUG(("------------------------------------------------"));
+
+	/*
+	 * set flag if we need to poll for ikbd interrupts
+	 */
+	if (Super(1L))
+		poll_interrupts = 1;
+
+	if (poll_interrupts && ikbd_int_pending())
+		fake_ikbd_int();
 
 	dev->act_len = 0L;		/* for safety, init bytes transferred */
 
@@ -981,6 +996,9 @@ retry_same:
 		return -1;
 	}
 
+	if (poll_interrupts && ikbd_int_pending())
+		fake_ikbd_int();
+
 	/* Pack data into FIFO ram */
 	pack_fifo(isp116x, dev, pipe, ptd, buffer, len);
 
@@ -1003,6 +1021,9 @@ retry_same:
 	/* Wait for it to complete */
 	for (;;)
 	{
+		if (poll_interrupts && ikbd_int_pending())
+			fake_ikbd_int();
+
 		/* Check whether the controller is done */
 		stat = isp116x_interrupt(isp116x);
 
@@ -1056,6 +1077,9 @@ retry_same:
 		unlock_usb(&job_in_progress);
 		return -1;
 	}
+
+	if (poll_interrupts && ikbd_int_pending())
+		fake_ikbd_int();
 
 	/* Unpack data from FIFO ram */
 	cc = unpack_fifo(isp116x, dev, pipe, ptd, buffer, len);
@@ -1146,6 +1170,9 @@ retry_same:
 
 	dev->status = 0;
 	unlock_usb(&job_in_progress);
+
+	if (poll_interrupts && ikbd_int_pending())
+		fake_ikbd_int();
 
 	return done;
 }
