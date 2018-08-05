@@ -1,13 +1,14 @@
 /*
- *	netusbee.h: miscellaneous header for netusbee.prg
+ * NetUSBee USB driver for TOS
  *
- * the definition of delay_loop was derived from the following EmuTOS code:
+ * netusbee.h: miscellaneous header for netusbee.prg
+ *
+ * Copyright (C) 2018 Roger Burrows
+ *
+ * The delay_loop() function is derived from EmuTOS:
  * asm.h - Assembler help routines
  *
- * Copyright (C) 2001-2017 The EmuTOS development team
- *
- * Authors:
- *  LVL   Laurent Vogel
+ * Copyright (C) 2013-2017 The EmuTOS development team
  *
  * This file is distributed under the GPL, version 2 or at your
  * option any later version.  See doc/license.txt for details.

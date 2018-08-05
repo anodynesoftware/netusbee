@@ -1,9 +1,14 @@
 /*
+ * NetUSBee USB driver for TOS
+ *
+ * Modified for TOS-only version of NetUSBee
+ * Copyright (C) 2018 Roger Burrows
+ *
+ * Parts of this code are derived from the Lightning VME driver by
+ * Ingo Uhlemann & Christian Zietz, and from:
+ *
  * NetUSBee USB driver for FreeMiNT.
  * Modified for USB by David Galvez. 2010 - 2011
- *
- * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
- * distribution. See the file CHANGES for a detailed log of changes.
  *
  * Copyright (c) 2007 Henrik Gilda.
  *

@@ -1,4 +1,9 @@
 /*
+ * NetUSBee USB driver for TOS
+ *
+ * Modified for TOS-only version of NetUSBee
+ * Copyright (C) 2018 Roger Burrows
+ *
  * Modified for Atari-NetUSBee by David Gálvez. 2010 - 2011
  *
  * ISP116x HCD (Host Controller Driver) for u-boot.

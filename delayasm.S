@@ -1,7 +1,11 @@
 /*
- * delayasm.S - assembler functions for delay calibration
+ * NetUSBee USB driver for TOS
  *
- * Modified for NetUSBee support by Roger Burrows, 2018
+ * Modified for TOS-only version of NetUSBee
+ * Copyright (C) 2018 Roger Burrows
+ *
+ * Based on the following EmuTOS code:
+ * delayasm.S - assembler functions for delay calibration
  *
  * Copyright (C) 2013-2017 The EmuTOS development team
  *

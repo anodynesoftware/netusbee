@@ -1,7 +1,9 @@
 /*
- * delay.h - header for delay.c
+ * NetUSBee USB driver for TOS
  *
- * Modified for NetUSBee support by Roger Burrows, 2018
+ * This code is taken from EmuTOS:
+ *
+ * delay.h - header for delay.c
  *
  * Copyright (C) 2013 The EmuTOS development team
  *

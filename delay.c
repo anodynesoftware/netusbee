@@ -1,4 +1,8 @@
 /*
+ * NetUSBee USB driver for TOS
+ *
+ * This code is taken from EmuTOS:
+ *
  * delay.c - initialise values used to provide microsecond-order delays
  *
  * note that the timings are quite imprecise (but conservative) unless
