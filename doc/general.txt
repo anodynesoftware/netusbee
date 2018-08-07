@@ -20,6 +20,9 @@ libcmini library (using startup.o & libcmini.a), resulting in very compact
 executables (< 14KB).  The latest version of the library is available from
 GitHub at this URL:
 	https://github.com/mfro0/libcmini/releases
+
+Note that the files are compiled with -mshort, since the USB API requires
+it.  Therefore you MUST use the short integer version of the libcmini files.
 For my simplistic purposes, I just copied startup.o & libcmini.a to the
 root of the repository, and then the Makefile works as-is.
 
